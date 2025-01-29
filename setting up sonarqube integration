@@ -1,0 +1,27 @@
+steps:
+  - name: Checkout Code
+    uses: actions/checkout@v2
+  - name: Set up Java
+    uses: actions/setup-java@v2
+    with:
+      java-version: '11'
+  - name: Install SonarQube Scanner
+    run: |
+      wget https://github.com/SonarSource/sonar-scanner-cli/releases/download/4.6.2.2472/sonar-scanner-cli-4.6.2.2472-linux.zip
+      unzip sonar-scanner-cli-4.6.2.2472-linux.zip
+      export PATH=$PATH:$PWD/sonar-scanner-4.6.2.2472-linux/bin
+  - name: Run SonarQube Analysis
+    run: |
+      sonar-scanner \
+      -Dsonar.projectKey=my_project_key \
+      -Dsonar.sources=src \
+      -Dsonar.host.url=https://sonarqube.example.com \
+      -Dsonar.login=$SONAR_TOKEN
+
+      sonar.projectKey=my_project_key
+      sonar.sources=src
+      sonar.tests=src/test
+      sonar.java.binaries=target/classes
+      sonar.junit.reportPaths=target/test-classes
+      sonar.scm.provider=git
+      sonar.sourceEncoding=UTF-8
